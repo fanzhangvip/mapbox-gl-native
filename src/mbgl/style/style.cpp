@@ -308,7 +308,7 @@ void Style::cascade(const TimePoint& timePoint, MapMode mode) {
         layer->baseImpl->cascade(parameters);
     }
 
-    light.cascade(parameters);
+    transitioningLight = TransitioningLight(light, std::move(transitioningLight), parameters);
 }
 
 void Style::recalculate(float z, const TimePoint& timePoint, MapMode mode) {
@@ -346,7 +346,7 @@ void Style::recalculate(float z, const TimePoint& timePoint, MapMode mode) {
         }
     }
 
-    light.evaluate(parameters);
+    evaluatedLight = EvaluatedLight(transitioningLight, parameters);
 
     // Remove the existing tiles if we didn't end up re-enabling the source.
     for (const auto& source : sources) {
